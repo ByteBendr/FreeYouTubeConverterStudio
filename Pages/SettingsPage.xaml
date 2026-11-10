@@ -1,0 +1,310 @@
+<Page
+    x:Class="FreeYouTubeConverterStudio.Pages.SettingsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:FreeYouTubeConverterStudio.Controls"
+    Loaded="Page_Loaded"
+    Unloaded="Page_Unloaded">
+
+    <ScrollViewer>
+        <StackPanel Padding="36,8,36,36" MaxWidth="940" HorizontalAlignment="Stretch" Spacing="4">
+
+            <TextBlock Text="Settings" Style="{StaticResource TitleTextBlockStyle}" />
+            <TextBlock Text="Changes are saved automatically."
+                       Foreground="{ThemeResource TextFillColorSecondaryBrush}" Margin="0,0,0,4" />
+
+            <!-- ================= Appearance ================= -->
+            <TextBlock Text="Appearance" Style="{StaticResource SectionHeaderStyle}" />
+
+            <controls:SettingCard Glyph="&#xE790;" Header="App theme"
+                                  Description="Choose light, dark, or follow Windows.">
+                <ComboBox x:Name="CmbTheme" Width="200" SelectionChanged="CmbTheme_SelectionChanged">
+                    <ComboBoxItem Content="Use system setting" Tag="System" />
+                    <ComboBoxItem Content="Light" Tag="Light" />
+                    <ComboBoxItem Content="Dark" Tag="Dark" />
+                </ComboBox>
+            </controls:SettingCard>
+
+            <controls:SettingCard Glyph="&#xE7B3;" Header="Window material"
+                                  Description="Mica Alt is the default. Acrylic shows more of your wallpaper and windows behind.">
+                <ComboBox x:Name="CmbBackdrop" Width="200" SelectionChanged="CmbBackdrop_SelectionChanged">
+                    <ComboBoxItem Content="Mica Alt" Tag="MicaAlt" />
+                    <ComboBoxItem Content="Mica" Tag="Mica" />
+                    <ComboBoxItem Content="Acrylic" Tag="Acrylic" />
+                </ComboBox>
+            </controls:SettingCard>
+
+            <controls:SettingCard Glyph="&#xE718;" Header="Always on top"
+                                  Description="Keep this window above other windows while downloads run.">
+                <ToggleSwitch IsOn="{x:Bind Settings.AlwaysOnTop, Mode=TwoWay}" />
+            </controls:SettingCard>
+
+            <!-- ================= Downloads ================= -->
+            <TextBlock Text="Downloads" Style="{StaticResource SectionHeaderStyle}" />
+
+            <controls:SettingCard Glyph="&#xE8B7;" Header="Output folder"
+                                  Description="Where finished files are saved.">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <TextBox Width="300" Text="{x:Bind Settings.OutputFolder, Mode=TwoWay}" />
+                    <Button Content="Browse" Click="BrowseOutput_Click" />
+                    <Button Click="OpenOutput_Click" ToolTipService.ToolTip="Open folder">
+                        <FontIcon Glyph="&#xED25;" FontSize="14" />
+                    </Button>
+                </StackPanel>
+            </controls:SettingCard>
+
+            <controls:SettingCard Glyph="&#xE714;" Header="Default format"
+                                  Description="Pre-selected on the Download page.">
+                <ComboBox x:Name="CmbFormat" Width="200" SelectionChanged="CmbFormat_SelectionChanged" />
+            </controls:SettingCard>
+
+            <controls:SettingCard Glyph="&#xE9D9;" Header="Default quality"
+                                  Description="Resolution for video, bitrate tier for audio. Falls back to the closest available.">
+                <ComboBox x:Name="CmbQuality" Width="200" SelectionChanged="CmbQuality_SelectionChanged" />
+            </controls:SettingCard>
+
+            <controls:SettingCard Glyph="&#xE70F;" Header="Filename template"
+                                  Description="Placeholders: {title} {author} {id} {quality} {format} {index} {date}">
+                <TextBox Width="300" Text="{x:Bind Settings.FilenameTemplate, Mode=TwoWay}" />
+            </controls:SettingCard>
+
+            <controls:SettingCard Glyph="&#xE8F1;" Header="Playlist subfolder"
+                                  Description="Save playlist downloads into a folder named after the playlist.">
+                <ToggleSwitch IsOn="{x:Bind Settings.CreatePlaylistSubfolder, Mode=TwoWay}" />
+            </controls:SettingCard>
+
+            <controls:SettingCard Glyph="&#xE8FD;" Header="Number playlist items"
+                                  Description="Prefix playlist files with their position (001 - …).">
+                <ToggleSwitch IsOn="{x:Bind Settings.PlaylistIndexPrefix, Mode=TwoWay}" />
+            </controls:SettingCard>
+
+            <controls:SettingCard Glyph="&#xE71B;" Header="Video links that include a playlist"
+                                  Description="When on, a link like watch?v=…&amp;list=… adds only that video instead of the entire playlist.">
+                <ToggleSwitch IsOn="{x:Bind Settings.SingleVideoOnMixedLinks, Mode=TwoWay}" />
+            </controls:SettingCard>
+
+            <controls:SettingCard Glyph="&#xE8C8;" Header="Overwrite existing files"
+                                  Description="When off, a numbered copy is created instead.">
+                <ToggleSwitch IsOn="{x:Bind Settings.OverwriteExisting, Mode=TwoWay}" />
+            </controls:SettingCard>
+
+            <controls:SettingCard Glyph="&#xE8AB;" Header="Simultaneous downloads"
+                                  Description="How many items download at the same time (1–10).">
+                <NumberBox x:Name="NumConcurrent" Width="140" Minimum="1" Maximum="10" Value="2" SmallChange="1"
+                           SpinButtonPlacementMode="Inline" ValueChanged="NumConcurrent_ValueChanged" />
+            </controls:SettingCard>
+
+            <controls:SettingCard Glyph="&#xE72C;" Header="Automatic retries"
+                                  Description="Retry a failed download this many times before giving up (0–5).">
+                <NumberBox x:Name="NumRetry" Width="140" Minimum="0" Maximum="5" SmallChange="1"
+                           SpinButtonPlacementMode="Inline" ValueChanged="NumRetry_ValueChanged" />
+            </controls:SettingCard>
+
+            <!-- ================= Behavior ================= -->
+            <TextBlock Text="Behavior" Style="{StaticResource SectionHeaderStyle}" />
+
+            <controls:SettingCard Glyph="&#xE768;" Header="Start downloading immediately"
+                                  Description="Begin the queue as soon as you add something.">
+                <ToggleSwitch IsOn="{x:Bind Settings.AutoStartQueue, Mode=TwoWay}" />
+            </controls:SettingCard>
+
+            <controls:SettingCard Glyph="&#xE77F;" Header="Paste links from clipboard"
+                                  Description="Fill the URL box automatically when you return to the app with a YouTube link copied.">
+                <ToggleSwitch IsOn="{x:Bind Settings.AutoPasteClipboard, Mode=TwoWay}" />
+            </controls:SettingCard>
+
+            <controls:SettingCard Glyph="&#xED25;" Header="Open folder when finished"
+                                  Description="Show the output folder after a queue completes.">
+                <ToggleSwitch IsOn="{x:Bind Settings.OpenFolderWhenDone, Mode=TwoWay}" />
+            </controls:SettingCard>
+
+            <controls:SettingCard Glyph="&#xE74D;" Header="Clear completed items"
+                                  Description="Remove successful downloads from the list when the queue finishes.">
+                <ToggleSwitch IsOn="{x:Bind Settings.ClearCompletedWhenDone, Mode=TwoWay}" />
+            </controls:SettingCard>
+
+            <!-- ================= Subtitles ================= -->
+            <TextBlock Text="Subtitles" Style="{StaticResource SectionHeaderStyle}" />
+
+            <controls:SettingCard Glyph="&#xE8F2;" Header="Download subtitles"
+                                  Description="Save a .srt file next to each download when a track exists.">
+                <ToggleSwitch IsOn="{x:Bind Settings.DownloadSubtitles, Mode=TwoWay}" />
+            </controls:SettingCard>
+
+            <controls:SettingCard Glyph="&#xE774;" Header="Subtitle language"
+                                  Description="Language code, e.g. en, es, de, ro."
+                                  IsEnabled="{x:Bind Settings.DownloadSubtitles, Mode=OneWay}">
+                <TextBox Width="100" MaxLength="12" Text="{x:Bind Settings.SubtitleLanguage, Mode=TwoWay}" />
+            </controls:SettingCard>
+
+            <controls:SettingCard Glyph="&#xE714;" Header="Embed subtitles in MP4"
+                                  Description="Mux the subtitles into the video file (requires FFmpeg)."
+                                  IsEnabled="{x:Bind Settings.DownloadSubtitles, Mode=OneWay}">
+                <ToggleSwitch IsOn="{x:Bind Settings.EmbedSubtitles, Mode=TwoWay}" />
+            </controls:SettingCard>
+
+            <!-- ================= Dependencies ================= -->
+            <TextBlock Text="Dependencies" Style="{StaticResource SectionHeaderStyle}" />
+
+            <controls:SettingCard x:Name="DepsCard" Glyph="&#xE73E;" Header="Required components"
+                                  Description="FFmpeg, yt-dlp and Deno. If something is missing you can download it automatically, or install it yourself.">
+                <StackPanel Orientation="Horizontal" Spacing="10">
+                    <ProgressRing x:Name="DepsRing" Width="20" Height="20" IsActive="False" Visibility="Collapsed" />
+                    <Button x:Name="BtnCheckDeps" Style="{StaticResource AccentButtonStyle}" Click="CheckDeps_Click">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <FontIcon Glyph="&#xE9D9;" FontSize="14" />
+                            <TextBlock Text="Check dependencies" />
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+            </controls:SettingCard>
+
+            <controls:SettingCard Glyph="&#xE768;" Header="Check at startup"
+                                  Description="At launch, re-check only when the last result wasn't “all found”.">
+                <ToggleSwitch IsOn="{x:Bind Settings.CheckDependenciesAtStartup, Mode=TwoWay}" />
+            </controls:SettingCard>
+
+            <InfoBar x:Name="DepsInfo" IsOpen="False" IsClosable="True" Margin="0,4,0,0" />
+
+            <!-- ================= Download engine ================= -->
+            <TextBlock Text="Download engine" Style="{StaticResource SectionHeaderStyle}" />
+
+            <controls:SettingCard Glyph="&#xE9F5;" Header="Engine"
+                                  Description="Automatic uses YoutubeExplode first and switches to yt-dlp whenever it fails.">
+                <ComboBox x:Name="CmbEngine" Width="260" SelectionChanged="CmbEngine_SelectionChanged">
+                    <ComboBoxItem Content="Automatic (yt-dlp as fallback)" Tag="Auto" />
+                    <ComboBoxItem Content="YoutubeExplode only" Tag="YoutubeExplode" />
+                    <ComboBoxItem Content="yt-dlp only" Tag="YtDlp" />
+                </ComboBox>
+            </controls:SettingCard>
+
+            <controls:SettingCard Glyph="&#xE713;" Header="yt-dlp location"
+                                  Description="Leave empty to auto-detect (app tools folder, next to the app, or PATH).">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <TextBox Width="260" PlaceholderText="Auto-detect"
+                             Text="{x:Bind Settings.YtDlpPath, Mode=TwoWay}" />
+                    <Button Content="Browse" Click="BrowseYtDlp_Click" />
+                    <Button Content="Test" Click="TestYtDlp_Click" />
+                </StackPanel>
+            </controls:SettingCard>
+
+            <controls:SettingCard Glyph="&#xE896;" Header="Download / update yt-dlp"
+                                  Description="Fetches the latest yt-dlp.exe from GitHub into the app's tools folder. Run it again whenever YouTube changes something.">
+                <StackPanel Orientation="Horizontal" Spacing="10">
+                    <ProgressRing x:Name="YtDlpRing" Width="20" Height="20" IsActive="False" Visibility="Collapsed" />
+                    <Button x:Name="BtnInstallYtDlp" Content="Download latest" Click="InstallYtDlp_Click" />
+                </StackPanel>
+            </controls:SettingCard>
+
+            <InfoBar x:Name="YtDlpInfo" IsOpen="False" IsClosable="True" Margin="0,4,0,0" />
+
+            <controls:SettingCard x:Name="LoginCard" Glyph="&#xE77B;" Header="YouTube account"
+                                  Description="Sign in once in a built-in browser. The session is saved for yt-dlp, so you never have to export cookies by hand. Fixes “sign in to confirm you're not a bot” and age-restricted videos.">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <Button x:Name="BtnSignIn" Click="SignIn_Click" Style="{StaticResource AccentButtonStyle}">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <FontIcon Glyph="&#xE77B;" FontSize="14" />
+                            <TextBlock x:Name="SignInText" Text="Sign in to YouTube" />
+                        </StackPanel>
+                    </Button>
+                    <Button x:Name="BtnSignOut" Content="Remove" Click="SignOut_Click" />
+                </StackPanel>
+            </controls:SettingCard>
+
+            <controls:SettingCard Glyph="&#xE8D7;" Header="Use saved login with yt-dlp"
+                                  Description="Applies to every yt-dlp download and link lookup while a login is saved.">
+                <ToggleSwitch IsOn="{x:Bind Settings.UseSavedLogin, Mode=TwoWay}" />
+            </controls:SettingCard>
+
+            <controls:SettingCard x:Name="DenoCard" Glyph="&#xE756;" Header="JavaScript runtime (Deno)"
+                                  Description="Recent yt-dlp versions need Deno to read YouTube. This runs “winget install DenoLand.Deno” for you.">
+                <StackPanel Orientation="Horizontal" Spacing="10">
+                    <ProgressRing x:Name="DenoRing" Width="20" Height="20" IsActive="False" Visibility="Collapsed" />
+                    <Button x:Name="BtnDeno" Content="Install Deno" Click="InstallDeno_Click" />
+                </StackPanel>
+            </controls:SettingCard>
+
+            <InfoBar x:Name="LoginInfo" IsOpen="False" IsClosable="True" Margin="0,4,0,0" />
+            <InfoBar x:Name="DenoInfo" IsOpen="False" IsClosable="True" Margin="0,4,0,0" />
+
+            <controls:SettingCard Glyph="&#xE8D7;" Header="Use cookies from browser"
+                                  Description="Alternative to the built-in sign-in: read cookies from an installed browser. Only used when no saved login is active. Close that browser first if it fails.">
+                <ComboBox x:Name="CmbCookies" Width="200" SelectionChanged="CmbCookies_SelectionChanged">
+                    <ComboBoxItem Content="None" Tag="None" />
+                    <ComboBoxItem Content="Chrome" Tag="chrome" />
+                    <ComboBoxItem Content="Edge" Tag="edge" />
+                    <ComboBoxItem Content="Firefox" Tag="firefox" />
+                    <ComboBoxItem Content="Brave" Tag="brave" />
+                    <ComboBoxItem Content="Opera" Tag="opera" />
+                    <ComboBoxItem Content="Vivaldi" Tag="vivaldi" />
+                </ComboBox>
+            </controls:SettingCard>
+
+            <controls:SettingCard Glyph="&#xE756;" Header="Extra yt-dlp arguments"
+                                  Description="Advanced. Appended to every yt-dlp download, e.g. --limit-rate 2M">
+                <TextBox Width="300" PlaceholderText="(none)" Text="{x:Bind Settings.YtDlpExtraArgs, Mode=TwoWay}" />
+            </controls:SettingCard>
+
+            <!-- ================= FFmpeg ================= -->
+            <TextBlock Text="FFmpeg" Style="{StaticResource SectionHeaderStyle}" />
+
+            <controls:SettingCard Glyph="&#xE713;" Header="FFmpeg location"
+                                  Description="Needed for 720p and above, MP3 conversion and embedding subtitles.">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <TextBox Width="220" PlaceholderText="Auto-detect" Text="{x:Bind Settings.FFmpegPath, Mode=TwoWay}" />
+                    <Button Content="Browse" Click="BrowseFfmpeg_Click" />
+                    <Button Content="Test" Click="TestFfmpeg_Click" />
+                    <Button x:Name="BtnDownloadFfmpeg" Content="Download" Click="DownloadFfmpeg_Click" />
+                </StackPanel>
+            </controls:SettingCard>
+
+            <InfoBar x:Name="FfmpegInfo" IsOpen="False" IsClosable="True" Margin="0,4,0,0" />
+
+            <controls:SettingCard Glyph="&#xE9D9;" Header="Encoder speed preset"
+                                  Description="Slower presets compress better but take longer when converting.">
+                <ComboBox x:Name="CmbPreset" Width="200" SelectionChanged="CmbPreset_SelectionChanged" />
+            </controls:SettingCard>
+
+            <controls:SettingCard Glyph="&#xE896;" Header="Get FFmpeg"
+                                  Description="Download a build, then point the location above to ffmpeg.exe.">
+                <HyperlinkButton Content="ffmpeg.org/download" NavigateUri="https://ffmpeg.org/download.html" />
+            </controls:SettingCard>
+
+            <!-- ================= Data ================= -->
+            <TextBlock Text="Data" Style="{StaticResource SectionHeaderStyle}" />
+
+            <controls:SettingCard Glyph="&#xE8B7;" Header="Settings file"
+                                  Description="Stored in your local app data folder.">
+                <Button Content="Show in Explorer" Click="OpenSettingsFolder_Click" />
+            </controls:SettingCard>
+
+            <controls:SettingCard Glyph="&#xE777;" Header="Reset all settings"
+                                  Description="Restore every option to its default value.">
+                <Button Content="Reset…" Click="Reset_Click" />
+            </controls:SettingCard>
+
+            <!-- ================= About ================= -->
+            <TextBlock Text="About" Style="{StaticResource SectionHeaderStyle}" />
+
+            <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                    BorderThickness="1" CornerRadius="{ThemeResource ControlCornerRadius}" Padding="20">
+                <Grid ColumnSpacing="18">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Image Source="ms-appx:///Assets/Logo.png" Width="72" Height="72" VerticalAlignment="Center" />
+
+                    <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="3">
+                        <TextBlock Text="Free YouTube Converter Studio" Style="{StaticResource SubtitleTextBlockStyle}" />
+                        <TextBlock x:Name="VersionText" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                        <TextBlock TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                   Text="Download and convert YouTube videos and playlists. Built with WinUI 3, YoutubeExplode, yt-dlp and FFmpeg." />
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</Page>
