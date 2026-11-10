@@ -118,7 +118,3 @@ This tool is provided for downloading content you have the right to save — you
 - [FFmpeg](https://ffmpeg.org/)
 - [Deno](https://deno.com/)
 - [Windows App SDK / WinUI 3](https://learn.microsoft.com/windows/apps/winui/winui3/) and [WebView2](https://developer.microsoft.com/microsoft-edge/webview2/)
-
-## License
-
-Add your license here (for example MIT) and include a `LICENSE` file in the repository.
