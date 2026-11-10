@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="FreeYouTubeConverterStudio/Assets/Logo.png" alt="Free YouTube Converter Studio logo" width="110">
+<img src="/Assets/Logo.png" alt="Free YouTube Converter Studio logo" width="110">
 
 # Free YouTube Converter Studio
 
